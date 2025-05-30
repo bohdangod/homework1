@@ -1,0 +1,71 @@
+import re  
+
+class Computer:
+    def __init__(self, cpu, ram):
+        self._cpu = cpu
+        self._ram = ram
+
+    def compute(self):
+        return f"Processing with {self._cpu} CPU and {self._ram}GB RAM"
+
+class Phone:
+    def __init__(self, phone_number):
+        self._phone_number = phone_number
+
+    def call(self, number):
+        return f"Calling {number} from {self._phone_number}"
+
+class Tablet:
+    def __init__(self, screen_size):
+        self._screen_size = screen_size
+
+    def touch_input(self):
+        return f"Interacting via {self._screen_size}-inch touchscreen"
+
+class SmartDevice(Computer, Phone, Tablet):
+    def __init__(self, model, cpu, ram, phone_number, screen_size, os):
+        self.model = model
+        self.os = os
+        Computer.__init__(self, cpu, ram)
+        Phone.__init__(self, phone_number)
+        Tablet.__init__(self, screen_size)
+
+    def get_device_info(self):
+        return (f"{self.model} running {self.os}\n"
+                f"{self.compute()}\n"
+                f"Phone functionality: {self.call('+380123456789')}\n"
+                f"Tablet features: {self.touch_input()}")
+
+    def __str__(self):
+        return f"{self.model} - {self.os}, CPU: {self._cpu}, RAM: {self._ram}GB, Screen: {self._screen_size}-inch"
+
+
+def validate_phone_number():
+    while True:
+        phone_number = input("Enter phone number (format +380123456789): ")
+        if re.match(r"^\+\d{11,15}$", phone_number):
+            return phone_number
+        print("❌ Invalid phone number! Try again.")
+
+
+def validate_number(prompt, value_type=float):
+    while True:
+        try:
+            return value_type(input(prompt))
+        except ValueError:
+            print("❌ Invalid input! Please enter a numeric value.")
+
+
+model = input("Enter device model: ")
+cpu = input("Enter CPU type: ")
+ram = validate_number("Enter RAM size (GB): ", int)
+phone_number = validate_phone_number()
+screen_size = validate_number("Enter screen size (inches): ", float)
+os = input("Enter operating system: ")
+
+
+device = SmartDevice(model, cpu, ram, phone_number, screen_size, os)
+
+
+print(device.get_device_info())
+print(device)
